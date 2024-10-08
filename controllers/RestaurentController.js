@@ -54,6 +54,33 @@ const addrest = async (req, res) => {
     }
 };
 
+// delete restaurent 
+const deleterestbyid = async (req, res) => {
+    try {
+        const productId = req.params.id;
+        const deletedProduct = await RestaurentDetails.findByIdAndDelete(productId);
+        
+        if (!deletedProduct) {
+            return res.status(404).json({ 
+                success:false,
+                message: 'restaurent not found'
+             });
+        }
+
+        return res.status(200).json({ 
+            message: 'Restaurent deleted successfully', 
+            deletedProduct 
+        });
+    } catch (error) {
+        return res.status(500).json({ 
+            success : false, 
+            error: error.message 
+        });
+    }
+};
+
+
 module.exports = {
-    addrest: [upload.single('image'), addrest]
+    addrest: [upload.single('image'), addrest],
+    deleterestbyid
 };

@@ -67,16 +67,55 @@ const getproductbyid = async(req,res)=>{
                  message: "No Restaurent found" 
                 });
         }
+        const restaurentname = rest.RestaurentName
+        const products = await Product.find({ restaurent: restid });
+        return res.status(200).json({
+            success: true,
+            restaurentname,
+            products
+        });
        
     } catch (error) {
-        
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
     }
 }
 
+// to delete the product
+const deleteProductbyid = async (req, res) => {
+    try {
+        const productId = req.params.id;
+        const deletedProduct = await Product.findByIdAndDelete(productId);
+        
+        if (!deletedProduct) {
+            return res.status(404).json({ 
+                success:false,
+                message: 'Product not found'
+             });
+        }
+
+        return res.status(200).json({ 
+            message: 'Product deleted successfully', 
+            deletedProduct 
+        });
+    } catch (error) {
+        return res.status(500).json({ 
+            success : false, 
+            error: error.message 
+        });
+    }
+};
 
 
 
 
 
- module.exports = {addProduct : [upload.single('image'),addProduct]};
+ module.exports = {
+    addProduct : [upload.single('image'),addProduct],
+    getproductbyid,
+    deleteProductbyid
+
+ };
  
