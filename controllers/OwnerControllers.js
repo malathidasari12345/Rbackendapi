@@ -2,6 +2,7 @@ const Vendor = require("../models/Owner")
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv');
+const Restaurent = require("../models/Restaurents");
 dotenv.config();
 
 const VendorRegister = async (req, res) => {
@@ -113,13 +114,37 @@ const getAllUsers = async (req, res) => {
 };
 
 // get user
-const getUser = (req, res) => {
-    const { _id: id, email, username } = req.user; 
-    res.status(200).json({
-        success: true,
-        user: {  _id, email,username}  
-    });
+const getUser = async (req, res) => {
+    const { id } = req.params; 
+    if (!id) {
+        return res.status(400).json({
+            success: false,
+            message: "User ID is required"
+        });
+    }
+
+    try {
+        const user = await Vendor.findById(id).populate("RestaurentDetails");
+        
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            user: { _id: user._id, email: user.email, username: user.username , Restaurent : user.RestaurentDetails}
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error: error.message,
+        });
+    }
 };
+
 
 module.exports = {
     VendorRegister,

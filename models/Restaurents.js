@@ -33,10 +33,10 @@ const RestaurentSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Vendor'
     }],
-    // products: [{
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Product'
-    // }]
+    products: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product'
+    }]
 });
 
 const Restaurent = mongoose.model('Restaurent',RestaurentSchema );

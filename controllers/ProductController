@@ -1,0 +1,82 @@
+const Product = require("../models/Products.js")
+const Restaurant = require("../models/Restaurents.js")
+const multer = require("multer");
+const path = require('path'); 
+
+// multer to add upload files
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, 'uploads/');
+    },
+    filename: function(req, file, cb) {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
+const upload = multer({ storage: storage });
+
+// add product
+ const addProduct = async (req,res)=>{
+    try{
+        const { productName, price, category, bestSeller, description } = req.body;
+        const image = req.file ? req.file.filename : undefined;
+        // adding products using restaurent id
+        const restid = req.params.id
+        const restaurent = await Restaurant.findById(restid)
+        if(!restaurent){
+            return res.status(404).json({
+                success :false,
+                 message: "No Restaurent found" 
+                });
+        }
+        // creating a product
+        const product = new Product({
+            productName,
+            price,
+            category,
+            bestSeller,
+            description,
+            image,
+            restaurent : restaurent._id
+        })
+        const savedProduct = await product.save()
+        // saving product in restaurent model
+        restaurent.products.push(savedProduct)
+        await restaurent.save()
+        res.status(201).json({
+            success: true,
+            message: 'Product added successfully',
+            savedProduct
+        });
+    }catch(error){
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+ }
+// get products by id
+
+const getproductbyid = async(req,res)=>{
+    try {
+
+        const restid = req.params.id
+        const rest = await Restaurant.findById(restid)
+        if(!rest){
+            return res.status(404).json({
+                success :false,
+                 message: "No Restaurent found" 
+                });
+        }
+       
+    } catch (error) {
+        
+    }
+}
+
+
+
+
+
+
+ module.exports = {addProduct : [upload.single('image'),addProduct]};
+ 

@@ -23,8 +23,7 @@ const verifyToken = async(req,res, next)=>{
             message : "vendor not found"
         })
     }
-   
-    next()
+   next()
 
    }catch(error){
         return res.status(500).json({
