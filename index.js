@@ -6,9 +6,11 @@ const RestaurantRoute = require("./routes/RestaurentsRoute")
 const ProductRoute = require("./routes/ProductsRoute")
 const bodyparser = require("body-parser")
 const path = require('path')
+const cors = require('cors')
 // middleware
 app.use(express.json());
 app.use( bodyparser.json());
+app.use(cors())
 
 // routes
 // Vendor Route
