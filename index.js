@@ -9,7 +9,6 @@ const path = require('path')
 const cors = require('cors')
 // middleware
 app.use(express.json());
-app.use( bodyparser.json());
 app.use(cors())
 
 // routes
