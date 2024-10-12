@@ -21,7 +21,7 @@ app.use ("/products", ProductRoute)
 // route for uploading images
 app.use("/uploads", express.static('uploads'))
 app.use("/",(req,res)=>{
-    res.send("welcome to HomePage")
+   res.json({ message: "Welcome to HomePage" });
 })
 
 
